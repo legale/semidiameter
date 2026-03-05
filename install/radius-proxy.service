@@ -1,0 +1,31 @@
+[Unit]
+Description=Semidiameter RADIUS Proxy
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+Environment=IP_ADDRESS=172.16.133.143
+
+# --- CONFIGURATION EXAMPLES ---
+# To use one, uncomment it and comment others.
+
+# 1. AUTH + ACCT Combined (Recommended)
+ExecStart=/usr/local/bin/radius_proxy -s secret -d 0.0.0.0:1812 ${IP_ADDRESS}:1812 0.0.0.0:1813 ${IP_ADDRESS}:1813
+
+# 2. ONLY AUTH (Plain)
+# ExecStart=/usr/local/bin/radius_proxy 0.0.0.0:1812 ${IP_ADDRESS}:1812
+
+# 3. ONLY ACCT (With Secret)
+# ExecStart=/usr/local/bin/radius_proxy -s secret 0.0.0.0:1813 ${IP_ADDRESS}:1813
+
+Restart=always
+RestartSec=3
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
